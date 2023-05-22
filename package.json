@@ -6,7 +6,7 @@
   "scripts": {
     "build": "babel src --out-dir build",
     "start": "node build/index.js",
-    "dev": "babel-node src/index.js",
+    "dev": "nodemon --exec babel-node src/index.js",
     "test": "cross-env NODE_ENV=test mocha test/unit/**/*Test.js --require @babel/register --require test/unit/setup.js --reporter spec --slow 5000",
     "lint": "eslint src --fix --ext js"
   },
@@ -61,6 +61,7 @@
     "husky": "^4.3.0",
     "lint-staged": "^10.4.0",
     "mocha": "^10.2.0",
+    "nodemon": "^2.0.22",
     "rewire": "^5.0.0",
     "sinon": "^9.0.3",
     "supertest": "^5.0.0"

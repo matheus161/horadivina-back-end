@@ -7,13 +7,13 @@ async function getFilesInDirectory(directory, fileNameEnding) {
     const directoryContent = await read(directory);
 
     /* eslint-disable */
-    return directoryContent
-        .filter(file => file.endsWith(fileNameEnding))
-        .map(file => {
-            const filePath = path.join(directory, file);
-            return (require(filePath)).default;
-        });
-    /* eslint-enable */
+  return directoryContent
+    .filter((file) => file.endsWith(fileNameEnding))
+    .map((file) => {
+      const filePath = path.join(directory, file);
+      return require(filePath).default;
+    });
+  /* eslint-enable */
 }
 
 export default { getFilesInDirectory };

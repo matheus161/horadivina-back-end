@@ -3,7 +3,9 @@ import { User } from '../models/User';
 async function create(req, res) {
     try {
         if (req.emailInUse) {
-            return res.status(400).json({ message: `O email ${req.body.email} já está em uso.` });
+            return res
+                .status(400)
+                .json({ message: `O email ${req.body.email} já está em uso.` });
         }
 
         const user = await User.create(req.body);
@@ -20,10 +22,14 @@ async function update(req, res) {
     try {
         const { userId, body } = req;
 
-        const user = await User.findByIdAndUpdate(userId, body, { new: true }).select('+password');
+        const user = await User.findByIdAndUpdate(userId, body, {
+            new: true,
+        }).select('+password');
 
         if (!user) {
-            return res.status(404).json({ message: `Não foi encontrado usuário com o id ${userId}` });
+            return res
+                .status(404)
+                .json({ message: `Não foi encontrado usuário com o id ${userId}` });
         }
 
         // Precisamos chamar save pra acionar o middleware de criptografia.
@@ -51,7 +57,9 @@ async function getById(req, res) {
         const user = await User.findById(req.params.id);
 
         if (!user) {
-            return res.status(404).json({ message: `Não há usuário com o id ${req.params.id}.` });
+            return res
+                .status(404)
+                .json({ message: `Não há usuário com o id ${req.params.id}.` });
         }
 
         return res.status(200).json(user);
@@ -79,5 +87,5 @@ export default {
     update,
     remove,
     getAll,
-    getById
+    getById,
 };
