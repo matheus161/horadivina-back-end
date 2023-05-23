@@ -7,6 +7,12 @@ import { authRules } from '../models/User';
 
 const router = Router();
 
-router.post('/', limitRequests.heavily, validate(authRules), emailInUse, SessionController.auth);
+router.post(
+    '/',
+    limitRequests.heavily,
+    validate(authRules),
+    emailInUse,
+    SessionController.auth
+);
 
 export default { router, name: '/auth' };

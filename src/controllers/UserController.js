@@ -1,4 +1,5 @@
 import { User } from '../models/User';
+import PasswordUtils from '../utils/PasswordUtils';
 
 async function create(req, res) {
     try {
@@ -21,10 +22,8 @@ async function create(req, res) {
 async function update(req, res) {
     try {
         const { userId, body } = req;
-
-        const user = await User.findByIdAndUpdate(userId, body, {
-            new: true,
-        }).select('+password');
+        const { email } = body;
+        const user = await User.findById(userId);
 
         if (!user) {
             return res
@@ -32,12 +31,52 @@ async function update(req, res) {
                 .json({ message: `Não foi encontrado usuário com o id ${userId}` });
         }
 
-        // Precisamos chamar save pra acionar o middleware de criptografia.
-        await user.save();
+        if (email !== user.email) {
+            // Checando se o email existe
+            if (await User.findOne({ email })) {
+                return res
+                    .status(400)
+                    .json({ message: 'Email inválido, tente novamente' });
+            }
+        }
+
+        const userUpdated = await User.findByIdAndUpdate(userId, body, {
+            new: true,
+        }).select('-password');
+
+        return res.status(200).json(userUpdated);
+    } catch ({ message }) {
+        return res.status(500).json({ message });
+    }
+}
+
+async function changePassword(req, res) {
+    try {
+        const { userId } = req;
+        const { password, newPassword } = req.body;
+
+        if (password === newPassword) {
+            return res
+                .status(401)
+                .json({ message: 'A nova senha não pode ser igual a atual' });
+        }
+
+        const user = await User.findById(userId).select('+password');
+
+        if (!user) {
+            return res.status(404).json({ message: 'Usuário não encontrado' });
+        }
+
+        const passwordsMatch = await PasswordUtils.match(password, user.password);
+        if (!passwordsMatch) {
+            return res.status(401).json({ message: 'A senha atual está incorreta' });
+        }
+
+        user.password = newPassword;
+        await user.save(); // Possui um 'pré' que faz a encriptação
 
         user.password = undefined;
-
-        return res.status(200).json(user);
+        return res.status(200).json({ message: 'Senha alterada com sucesso' });
     } catch ({ message }) {
         return res.status(500).json({ message });
     }
@@ -76,7 +115,7 @@ async function remove(req, res) {
             return res.status(404).json({ message: 'Usuário não encontrado.' });
         }
 
-        return res.status(200).json(user);
+        return res.status(200).json({ message: 'Usuário deletado com sucesso' });
     } catch ({ message }) {
         return res.status(500).json({ message });
     }
@@ -88,4 +127,5 @@ export default {
     remove,
     getAll,
     getById,
+    changePassword,
 };
