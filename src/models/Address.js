@@ -18,13 +18,13 @@ const Address = new Schema({
         type: String,
         required: true,
     },
-    country: {
+    state: {
         type: String,
         required: true,
     },
-    additionalInfo: {
+    country: {
         type: String,
-        required: false,
+        required: true,
     },
 });
 
@@ -36,9 +36,9 @@ const addressRules = Joi.object({
         .required(),
     street: Joi.string().max(50).required(),
     city: Joi.string().max(50).required(),
+    state: Joi.string().max(50).required(),
     country: Joi.string().max(50).required(),
     number: Joi.number().integer().positive().required(),
-    additionalInfo: Joi.string().max(100),
 });
 
 export { Address, addressRules };
