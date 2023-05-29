@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import mongoose, { Schema, model } from 'mongoose';
 import Joi from 'joi';
 import { Address, addressRules } from './Address';
 
@@ -20,6 +20,13 @@ const InstitutionSchema = new Schema(
             type: String,
             required: false,
         },
+        subscribed: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'User',
+                required: false,
+            },
+        ],
     },
     { timeStamps: true, discriminatorKey: 'role' }
 );
