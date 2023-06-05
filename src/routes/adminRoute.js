@@ -1,7 +1,7 @@
 import { Router } from "express";
 import AdminController from "../controllers/AdminController";
 import limitRequests from "../middlewares/limitRequests";
-//import verifyToken from "../middlewares/verifyToken";
+import verifyTokenAdmin from "../middlewares/verifyTokenAdmin";
 import verifyId from "../middlewares/verifyId";
 import validate from "../middlewares/validate";
 import { adminRules } from "../models/Admin";
@@ -10,6 +10,7 @@ import adminEmailInUse from "../middlewares/adminEmailInUse";
 const router = Router();
 
 router.use(limitRequests.slightly);
+router.use(verifyTokenAdmin);
 
 router.post("/", validate(adminRules), adminEmailInUse, AdminController.create);
 router.get("/", AdminController.getAll);

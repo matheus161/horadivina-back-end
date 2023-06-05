@@ -12,7 +12,7 @@ function isMalformed(type, token) {
   return false;
 }
 
-async function verifyToken(req, res, next) {
+async function verifyTokenAdmin(req, res, next) {
   const header = req.headers.authorization;
 
   if (!header) {
@@ -26,7 +26,7 @@ async function verifyToken(req, res, next) {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.SECRET);
+    const decoded = jwt.verify(token, process.env.SECRET_ADMIN);
 
     req.userId = decoded.id;
 
@@ -36,4 +36,4 @@ async function verifyToken(req, res, next) {
   }
 }
 
-export default verifyToken;
+export default verifyTokenAdmin;

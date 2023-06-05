@@ -4,6 +4,11 @@ import PasswordUtils from "../utils/PasswordUtils";
 
 const AdminSchema = new Schema(
   {
+    cnpj: {
+      type: String,
+      required: false,
+    },
+
     name: {
       type: String,
       required: true,
@@ -46,6 +51,7 @@ const emailRules = Joi.string().email().required();
 const passwordRules = Joi.string().min(8).max(40).required();
 
 const adminRules = Joi.object({
+  cnpj: Joi.string().pattern(/^[0-9]{14}$/),
   name: Joi.string()
     .pattern(new RegExp(/^[A-Za-zÁÉÍÓÚáéíóúãõÃÕâêôÂÊÔ ]+$/))
     .required(),
