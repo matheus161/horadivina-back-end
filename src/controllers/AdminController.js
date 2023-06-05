@@ -45,7 +45,8 @@ async function getById(req, res) {
 
 async function update(req, res) {
   try {
-    const admin = await Admin.findById(req.params.id);
+    const { userId, body } = req;
+    const admin = await Admin.findById(userId);
 
     if (!admin) {
       return res.status(404).json({
@@ -53,7 +54,7 @@ async function update(req, res) {
       });
     }
 
-    if (admin.email != req.body.email) {
+    if (admin.email != body.email) {
       if (req.adminEmailInUse) {
         return res
           .status(400)
@@ -74,11 +75,9 @@ async function update(req, res) {
     //   }
     // }
 
-    const adminUpdated = await Admin.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+    const adminUpdated = await Admin.findByIdAndUpdate(userId, body, {
+      new: true,
+    });
 
     return res.status(200).json(adminUpdated);
   } catch ({ message }) {
