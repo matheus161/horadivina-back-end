@@ -3,14 +3,14 @@ import { Institution } from '../models/Institution';
 async function create(req, res) {
     try {
         const {
-            name, information, address, events
+            name, information, address, dailyEvents
         } = req.body;
 
         const institution = await Institution.create({
             name,
             address,
             information,
-            events,
+            dailyEvents,
         });
 
         return res.status(201).json(institution);

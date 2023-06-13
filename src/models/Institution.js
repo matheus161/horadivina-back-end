@@ -1,6 +1,7 @@
 import mongoose, { Schema, model } from 'mongoose';
 import Joi from 'joi';
 import { Address, addressRules } from './Address';
+import { Event, eventRules } from './Event';
 
 const InstitutionSchema = new Schema(
     {
@@ -16,9 +17,9 @@ const InstitutionSchema = new Schema(
             type: String,
             required: false,
         },
-        events: {
-            type: String,
-            required: false,
+        dailyEvents: {
+            type: Event,
+            required: true,
         },
         subscribed: [
             {
@@ -37,7 +38,7 @@ const intitutionRules = Joi.object({
     name: Joi.string().max(100).required(),
     address: addressRules.required(),
     information: Joi.string().max(100),
-    events: Joi.string().max(100),
+    dailyEvents: eventRules.required(),
 });
 
 export { Institution, intitutionRules };
