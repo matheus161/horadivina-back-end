@@ -2,6 +2,7 @@ import mongoose, { Schema, model } from 'mongoose';
 import Joi from 'joi';
 import { Address, addressRules } from './Address';
 import { Event, eventRules } from './Event';
+import { ContactDetails, contactDetailsRules } from './ContactDetails';
 
 const InstitutionSchema = new Schema(
     {
@@ -14,7 +15,7 @@ const InstitutionSchema = new Schema(
             required: true,
         },
         information: {
-            type: String,
+            type: ContactDetails,
             required: false,
         },
         dailyEvents: {
@@ -37,7 +38,7 @@ const Institution = model('Institution', InstitutionSchema);
 const intitutionRules = Joi.object({
     name: Joi.string().max(100).required(),
     address: addressRules.required(),
-    information: Joi.string().max(100),
+    information: contactDetailsRules.required(),
     dailyEvents: eventRules.required(),
 });
 

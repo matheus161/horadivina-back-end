@@ -33,13 +33,13 @@ const Event = new Schema({
 });
 
 const eventRules = Joi.object({
-    domingo: Joi.string().max(50),
-    segunda: Joi.string().max(50),
-    terca: Joi.string().max(50),
-    quarta: Joi.string().max(50),
-    quinta: Joi.string().max(50),
-    sexta: Joi.string().max(50),
-    sabado: Joi.string().max(50),
+    domingo: Joi.string().max(50).allow(''),
+    segunda: Joi.string().max(50).allow(''),
+    terca: Joi.string().max(50).allow(''),
+    quarta: Joi.string().max(50).allow(''),
+    quinta: Joi.string().max(50).allow(''),
+    sexta: Joi.string().max(50).allow(''),
+    sabado: Joi.string().max(50).allow(''),
 });
 
 export { Event, eventRules };
