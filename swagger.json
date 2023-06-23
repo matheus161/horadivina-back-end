@@ -1,0 +1,1331 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "HoraDivina",
+    "version": "0.5.0",
+    "description": "Documentaçao refente ao Back End do projeto HoraDivina."
+  },
+  "host": "localhost:8080",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "tags": [
+    {
+      "name": "User",
+      "description": "Lista com todas as rotas referentes ao modulo de usuário."
+    },
+    {
+      "name": "Admin",
+      "description": "Lista com todas as rotas referentes ao modulo do administrador."
+    },
+    {
+      "name": "News",
+      "description": "Lista com todas as rotas referentes ao modulo de notícias."
+    },
+    {
+      "name": "Religion",
+      "description": "Lista com todas as rotas referentes ao modulo de religião"
+    },
+    {
+      "name": "Institution",
+      "description": "Lista com todas as rotas referentes so modulo de instituição"
+    }
+  ],
+  "paths": {
+    "/api/v1/auth": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Autentica o usuário e retorna um token JWT.",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Dados do usuario",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Autentica o profissional e gera um token JWT."
+          },
+          "400": {
+            "description": "Sem token"
+          },
+          "401": {
+            "description": "Senha invalida"
+          },
+          "403": {
+            "description": "Usuario desativado"
+          },
+          "404": {
+            "description": "Usuario nao encontrado"
+          },
+          "409": {
+            "description": "Token invalido."
+          }
+        }
+      }
+    },
+    "/api/v1/register": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Cria um novo usuário no banco de dados",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "dados do profissional",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Usuário cadastrado com sucesso."
+          },
+          "400": {
+            "description": "Requisicao de corpo invalida."
+          },
+          "404": {
+            "description": "Servico nao encontrado"
+          },
+          "409": {
+            "description": "Usuário ja cadastrado no banco de dados."
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      }
+    },
+    "/api/v1/user/": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Retorna uma lista com todos os usuários cadastrados no Banco de dados.",
+        "parameters": [
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista todos os usuários no banco.",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "401": {
+            "description": "Token invalido. "
+          },
+          "404": {
+            "description": "Sem token. "
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      }
+    },
+    "/api/v1/user/{id}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Retorna um usuário utilizando o seu id.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna o usuário com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Requisicao de corpo invalida"
+          },
+          "404": {
+            "description": "Usuário nao encontrado."
+          },
+          "500": {
+            "description": "Erro interno no servidor."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Deleta um usuário do banco de dados utilizando o ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Profissional deletado com sucesso."
+          },
+          "400": {
+            "description": "ID do profissional invalido"
+          },
+          "404": {
+            "description": "Profissional nao cadastrado."
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Atualiza um usuário já cadastrado.",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "name": "id"
+          },
+          {
+            "in": "body",
+            "required": true,
+            "name": "dados do usuário a serem atualizados",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário atualizado com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "ID do profissional invalido"
+          },
+          "401": {
+            "description": "Token invalido."
+          },
+          "404": {
+            "description": "Usuário nao encontrado/Sem Token."
+          },
+          "409": {
+            "description": "Usuário ja cadastrado."
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      }
+    },
+    "/api/v1/change-pass/": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Atualiza a senha de um usuário já cadastrado.",
+        "parameters": [
+          {
+            "in": "body",
+            "required": true,
+            "name": "dados do usuário a serem atualizados",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "password": {
+                  "type": "string"
+                },
+                "newPassword": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário atualizado com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "401": {
+            "description": "Token invalido."
+          },
+          "404": {
+            "description": "Usuário nao encontrado/Sem Token."
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      }
+    },
+    "/api/v1/auth/admin": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Autentica o admin e retorna um token JWT.",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Dados do admin",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Autentica o admin e gera um token JWT."
+          },
+          "401": {
+            "description": "Senha invalida/Token invalido"
+          },
+          "404": {
+            "description": "Admin nao encontrado/Sem token"
+          },
+          "500": {
+            "description": "Error interno do servidor."
+          }
+        }
+      }
+    },
+    "/api/v1/store/admin": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Cria um novo Administrador",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "dados do admin",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "schema": {
+                  "$ref": "#/definitions/Admin"
+                }
+              }
+            }
+          },
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Admin cadastrado com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/Admin"
+            }
+          },
+          "400": {
+            "description": "Requisicao de corpo invalida."
+          },
+          "401": {
+            "description": "Token invalido."
+          },
+          "404": {
+            "description": "Sem token."
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      }
+    },
+    "/api/v1/admin/": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Retorna uma lista com todos os admins cadastrados no Banco de dados.",
+        "parameters": [
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista todos os administradores no banco.",
+            "schema": {
+              "$ref": "#/definitions/Admin"
+            }
+          },
+          "401": {
+            "description": "Token invalido. "
+          },
+          "404": {
+            "description": "Sem token. "
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      }
+    },
+    "/api/v1/admin/{id}": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Lista um unico admin utilizando o seu id.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Admin"
+            },
+            "description": "Retorna o admin requerido."
+          },
+          "401": {
+            "description": "Token invalido."
+          },
+          "404": {
+            "description": "Admin nao encontrado/Sem Token."
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      }
+    },
+    "/api/v1/admin{id}": {
+      "put": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Atualiza os dados de um admin ja cadastro utilizando o ID para localizar.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "dados do cadastro",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "institutions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dados do Admin atualizados com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/Admin"
+            }
+          },
+          "401": {
+            "description": "Token invalido. "
+          },
+          "404": {
+            "description": "Admin nao encontrado/Sem token."
+          },
+          "409": {
+            "description": "Admin já existente no banco. "
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      }
+    },
+    "/api/v1/updatepass/admin{id}": {
+      "put": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Atualiza a senha de um admin ja cadastro utilizando o ID para localizar.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "dados do cadastro",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "password": {
+                  "type": "string"
+                },
+                "newPassword": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dados do Admin atualizados com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/Admin"
+            }
+          },
+          "401": {
+            "description": "Token invalido"
+          },
+          "404": {
+            "description": "Admin nao encontrado/Sem token."
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      }
+    },
+    "/api/v1/delete/admin/{id}": {
+      "delete": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Deleta um admin do banco de dados utilizando o seu Id.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Admin deletado com sucesso."
+          },
+          "401": {
+            "description": "Token invalido"
+          },
+          "404": {
+            "description": "Admin nao encontrado/Sem token"
+          },
+          "500": {
+            "description": "Erro interno no servidor."
+          }
+        }
+      }
+    },
+    "/api/v1/news/getByInstitution/{id}": {
+      "get": {
+        "tags": [
+          "News"
+        ],
+        "summary": "Retorna uma notícia utilizando o id de Institution.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna a notícia com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/News"
+            }
+          },
+          "400": {
+            "description": "Requisicao de corpo invalida"
+          },
+          "404": {
+            "description": "Notícia nao encontrado."
+          },
+          "500": {
+            "description": "Erro interno no servidor."
+          }
+        }
+      }
+    },
+    "/api/v1/news/{id}": {
+      "get": {
+        "tags": [
+          "News"
+        ],
+        "summary": "Retorna uma notícia utilizando seu id.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna a notícia com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/News"
+            }
+          },
+          "400": {
+            "description": "Requisicao de corpo invalida"
+          },
+          "404": {
+            "description": "Notícia nao encontrado."
+          },
+          "500": {
+            "description": "Erro interno no servidor."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "News"
+        ],
+        "summary": "Deleta uma notícia do banco de dados utilizando o ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Notícia deletada com sucesso."
+          },
+          "400": {
+            "description": "ID da notícia invalido"
+          },
+          "404": {
+            "description": "Notícia não cadastrada."
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      }
+    },
+    "/api/v1/religion/": {
+      "get": {
+        "tags": [
+          "Religion"
+        ],
+        "summary": "Retorna uma lista com todos as religiões cadastradas no Banco de dados.",
+        "parameters": [
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista todos as religiões no banco.",
+            "schema": {
+              "$ref": "#/definitions/Religion"
+            }
+          },
+          "401": {
+            "description": "Token invalido. "
+          },
+          "404": {
+            "description": "Sem token. "
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      }
+    },
+    "/api/v1/religion/{id}": {
+      "get": {
+        "tags": [
+          "Religion"
+        ],
+        "summary": "Retorna uma religião utilizando seu id.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna a notícia com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/Religion"
+            }
+          },
+          "400": {
+            "description": "Requisicao de corpo invalida"
+          },
+          "404": {
+            "description": "Religião nao encontrado."
+          },
+          "500": {
+            "description": "Erro interno no servidor."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Religion"
+        ],
+        "summary": "Deleta uma religião do banco de dados utilizando o ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Religião deletada com sucesso."
+          },
+          "400": {
+            "description": "ID da religião invalido"
+          },
+          "404": {
+            "description": "Religião nao cadastrado."
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Religion"
+        ],
+        "summary": "Atualiza uma religião já cadastrada.",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "name": "id"
+          },
+          {
+            "in": "body",
+            "required": true,
+            "name": "dados da religião a serem atualizados",
+            "schema": {
+              "$ref": "#/definitions/Religion"
+            }
+          },
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Religião atualizada com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/Religion"
+            }
+          },
+          "400": {
+            "description": "ID da religião invalido"
+          },
+          "401": {
+            "description": "Token invalido."
+          },
+          "404": {
+            "description": "Religião nao encontrada/Sem Token."
+          },
+          "409": {
+            "description": "Religião ja cadastrado."
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      }
+    },
+    "/api/v1/institutions": {
+      "post": {
+        "tags": [
+          "Institution"
+        ],
+        "summary": "Cria uma nova instituição",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "dados do admin",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "schema": {
+                  "$ref": "#/definitions/Institution"
+                }
+              }
+            }
+          },
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Instituição cadastrado com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/Institution"
+            }
+          },
+          "400": {
+            "description": "Requisicao de corpo invalida."
+          },
+          "401": {
+            "description": "Token invalido."
+          },
+          "404": {
+            "description": "Sem token."
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      }
+    },
+    "/api/v1/institutions/": {
+      "get": {
+        "tags": [
+          "Institution"
+        ],
+        "summary": "Retorna uma lista com todas as instituições cadastradas no Banco de dados.",
+        "parameters": [
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista todas as instituições no banco.",
+            "schema": {
+              "$ref": "#/definitions/Institution"
+            }
+          },
+          "401": {
+            "description": "Token invalido. "
+          },
+          "404": {
+            "description": "Sem token. "
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      }
+    },
+    "/api/v1/institutions/{id}": {
+      "get": {
+        "tags": [
+          "Institution"
+        ],
+        "summary": "Retorna uma instituição utilizando seu id.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna a instituição com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/Institution"
+            }
+          },
+          "400": {
+            "description": "Requisicao de corpo invalida"
+          },
+          "404": {
+            "description": "Instituição nao encontrado."
+          },
+          "500": {
+            "description": "Erro interno no servidor."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Institution"
+        ],
+        "summary": "Deleta uma instituição do banco de dados utilizando o ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Instituição deletada com sucesso."
+          },
+          "400": {
+            "description": "ID da instituição invalido"
+          },
+          "404": {
+            "description": "Instituição nao cadastrado."
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Institution"
+        ],
+        "summary": "Atualiza uma instituição já cadastrada.",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "name": "id"
+          },
+          {
+            "in": "body",
+            "required": true,
+            "name": "dados da instituição a serem atualizados",
+            "schema": {
+              "$ref": "#/definitions/Religion"
+            }
+          },
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Instituição atualizada com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/Religion"
+            }
+          },
+          "400": {
+            "description": "ID da religião invalido"
+          },
+          "401": {
+            "description": "Token invalido."
+          },
+          "404": {
+            "description": "Instituição nao encontrada/Sem Token."
+          },
+          "409": {
+            "description": "Instituição ja cadastrado."
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "required": [
+        "name",
+        "email",
+        "password"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Fulano da Silva"
+        },
+        "email": {
+          "type": "string",
+          "example": "fulano@gmail.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "010203"
+        }
+      }
+    },
+    "Admin": {
+      "type": "object",
+      "required": [
+        "name",
+        "email",
+        "password"
+      ],
+      "properties": {
+        "cnpj": {
+          "type": "string",
+          "example": "XX.XXX.XXX/0001-XX"
+        },
+        "name": {
+          "type": "string",
+          "example": "Admin"
+        },
+        "email": {
+          "type": "string",
+          "example": "admin@gmail.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "ab123456"
+        },
+        "institutions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "News": {
+      "type": "object",
+      "required": [
+        "title",
+        "description",
+        "date",
+        "institution",
+        "admin"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "example": "Inicia o período da Quaresma!"
+        },
+        "description": {
+          "type": "string",
+          "example": "O período da quaresma é muito importante, pois..."
+        },
+        "date": {
+          "type": "string",
+          "example": "23/06/2023"
+        },
+        "institutions": {
+          "type": "string",
+          "example": "64751bb2ea0a760fb84ee9b3"
+        },
+        "admin": {
+          "type": "string",
+          "example": "64751bb2ea0a760fb84ee9b3"
+        }
+      }
+    },
+    "Religion": {
+      "type": "object",
+      "required": [
+        "name",
+        "origin"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Catolicismo"
+        },
+        "origin": {
+          "type": "string",
+          "example": "Surgiu ainda no período..."
+        },
+        "description": {
+          "type": "string",
+          "example": "Religião de maio presença no território brasileiro"
+        },
+        "resume": {
+          "type": "string",
+          "example": "Caracterizado por serem..."
+        }
+      }
+    },
+    "Institution": {
+      "type": "object",
+      "required": [
+        "name",
+        "email",
+        "address",
+        "dailyEvents"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Igreja Nossa Senhora de Guadalupe"
+        },
+        "address": {
+          "type": "object",
+          "properties": {
+            "street": {
+              "type": "string",
+              "example": "Rua A"
+            },
+            "number": {
+              "type": "string",
+              "example": "1050-A"
+            },
+            "city": {
+              "type": "string",
+              "example": "Aracaju"
+            },
+            "state": {
+              "type": "string",
+              "example": "Sergipe"
+            },
+            "zip": {
+              "type": "string",
+              "example": "49500-100"
+            },
+            "lat": {
+              "type": "string",
+              "example": "12371212312321"
+            },
+            "log": {
+              "type": "string",
+              "example": "12371212312321"
+            }
+          }
+        },
+        "information": {
+          "type": "object",
+          "properties": {
+            "number": {
+              "type": "string",
+              "example": "+55 79 99999-9898"
+            },
+            "whatsapp": {
+              "type": "string",
+              "example": "+55 79 99999-9898"
+            },
+            "email": {
+              "type": "string",
+              "example": "email@email.com"
+            },
+            "website": {
+              "type": "string",
+              "example": "www.igreja.com.br"
+            },
+            "instagram": {
+              "type": "string",
+              "example": "instagram.com/igreja"
+            },
+            "facebook": {
+              "type": "string",
+              "example": "facebook.com/igreja"
+            }
+          }
+        },
+        "dailyEvents": {
+          "type": "object",
+          "properties": {
+            "domingo": {
+              "type": "string",
+              "example": "10:00 - 13:00 hs"
+            },
+            "segunda": {
+              "type": "string",
+              "example": "10:00 - 13:00 hs"
+            },
+            "terca": {
+              "type": "string",
+              "example": "10:00 - 13:00 hs"
+            },
+            "quarta": {
+              "type": "string",
+              "example": "10:00 - 13:00 hs"
+            },
+            "quinta": {
+              "type": "string",
+              "example": "10:00 - 13:00 hs"
+            },
+            "sexta": {
+              "type": "string",
+              "example": "10:00 - 13:00 hs"
+            },
+            "sabado": {
+              "type": "string",
+              "example": "10:00 - 13:00 hs"
+            }
+          }
+        },
+        "subscribed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
