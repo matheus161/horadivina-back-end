@@ -4,12 +4,13 @@ import { intitutionRules } from '../models/Institution';
 import limitRequests from '../middlewares/limitRequests';
 import verifyId from '../middlewares/verifyId';
 import validate from '../middlewares/validate';
+import verifyTokenAdmin from '../middlewares/verifyTokenAdmin';
 
 const router = Router();
 
 router.use(limitRequests.slightly);
 
-// TODO: Colocar validação para apenas Admin
+router.use(verifyTokenAdmin);
 router.post('/', validate(intitutionRules), InstitutionController.create);
 router.put('/:id', verifyId, InstitutionController.update);
 router.delete('/:id', verifyId, InstitutionController.remove);
