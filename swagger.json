@@ -6,10 +6,7 @@
     "description": "Documentaçao refente ao Back End do projeto HoraDivina."
   },
   "host": "localhost:8080",
-  "schemes": [
-    "http",
-    "https"
-  ],
+  "schemes": ["http", "https"],
   "tags": [
     {
       "name": "User",
@@ -35,9 +32,7 @@
   "paths": {
     "/api/v1/auth": {
       "post": {
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "summary": "Autentica o usuário e retorna um token JWT.",
         "parameters": [
           {
@@ -81,9 +76,7 @@
     },
     "/api/v1/register": {
       "post": {
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "summary": "Cria um novo usuário no banco de dados",
         "parameters": [
           {
@@ -116,9 +109,7 @@
     },
     "/api/v1/user/": {
       "get": {
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "summary": "Retorna uma lista com todos os usuários cadastrados no Banco de dados.",
         "parameters": [
           {
@@ -150,9 +141,7 @@
     },
     "/api/v1/user/{id}": {
       "get": {
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "summary": "Retorna um usuário utilizando o seu id.",
         "parameters": [
           {
@@ -181,9 +170,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "summary": "Deleta um usuário do banco de dados utilizando o ID.",
         "parameters": [
           {
@@ -216,9 +203,7 @@
         }
       },
       "put": {
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "summary": "Atualiza um usuário já cadastrado.",
         "parameters": [
           {
@@ -270,9 +255,7 @@
     },
     "/api/v1/change-pass/": {
       "put": {
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "summary": "Atualiza a senha de um usuário já cadastrado.",
         "parameters": [
           {
@@ -320,9 +303,7 @@
     },
     "/api/v1/auth/admin": {
       "post": {
-        "tags": [
-          "Admin"
-        ],
+        "tags": ["Admin"],
         "summary": "Autentica o admin e retorna um token JWT.",
         "parameters": [
           {
@@ -360,9 +341,7 @@
     },
     "/api/v1/store/admin": {
       "post": {
-        "tags": [
-          "Admin"
-        ],
+        "tags": ["Admin"],
         "summary": "Cria um novo Administrador",
         "parameters": [
           {
@@ -409,9 +388,7 @@
     },
     "/api/v1/admin/": {
       "get": {
-        "tags": [
-          "Admin"
-        ],
+        "tags": ["Admin"],
         "summary": "Retorna uma lista com todos os admins cadastrados no Banco de dados.",
         "parameters": [
           {
@@ -443,9 +420,7 @@
     },
     "/api/v1/admin/{id}": {
       "get": {
-        "tags": [
-          "Admin"
-        ],
+        "tags": ["Admin"],
         "summary": "Lista um unico admin utilizando o seu id.",
         "parameters": [
           {
@@ -483,9 +458,7 @@
     },
     "/api/v1/admin{id}": {
       "put": {
-        "tags": [
-          "Admin"
-        ],
+        "tags": ["Admin"],
         "summary": "Atualiza os dados de um admin ja cadastro utilizando o ID para localizar.",
         "parameters": [
           {
@@ -550,9 +523,7 @@
     },
     "/api/v1/updatepass/admin{id}": {
       "put": {
-        "tags": [
-          "Admin"
-        ],
+        "tags": ["Admin"],
         "summary": "Atualiza a senha de um admin ja cadastro utilizando o ID para localizar.",
         "parameters": [
           {
@@ -605,9 +576,7 @@
     },
     "/api/v1/delete/admin/{id}": {
       "delete": {
-        "tags": [
-          "Admin"
-        ],
+        "tags": ["Admin"],
         "summary": "Deleta um admin do banco de dados utilizando o seu Id.",
         "parameters": [
           {
@@ -642,9 +611,7 @@
     },
     "/api/v1/news/getByInstitution/{id}": {
       "get": {
-        "tags": [
-          "News"
-        ],
+        "tags": ["News"],
         "summary": "Retorna uma notícia utilizando o id de Institution.",
         "parameters": [
           {
@@ -675,9 +642,7 @@
     },
     "/api/v1/news/{id}": {
       "get": {
-        "tags": [
-          "News"
-        ],
+        "tags": ["News"],
         "summary": "Retorna uma notícia utilizando seu id.",
         "parameters": [
           {
@@ -706,9 +671,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "News"
-        ],
+        "tags": ["News"],
         "summary": "Deleta uma notícia do banco de dados utilizando o ID.",
         "parameters": [
           {
@@ -743,9 +706,7 @@
     },
     "/api/v1/religion/": {
       "get": {
-        "tags": [
-          "Religion"
-        ],
+        "tags": ["Religion"],
         "summary": "Retorna uma lista com todos as religiões cadastradas no Banco de dados.",
         "parameters": [
           {
@@ -775,11 +736,56 @@
         }
       }
     },
+    "/api/v1/religion": {
+      "post": {
+        "tags": ["Religion"],
+        "summary": "Cria uma nova religião",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "dados da religião",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "schema": {
+                  "$ref": "#/definitions/Religion"
+                }
+              }
+            }
+          },
+          {
+            "name": "auth",
+            "in": "header",
+            "description": "um token JWT de autenticacao",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Religião cadastrado com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/Religion"
+            }
+          },
+          "400": {
+            "description": "Requisicao de corpo invalida."
+          },
+          "401": {
+            "description": "Token invalido."
+          },
+          "404": {
+            "description": "Sem token."
+          },
+          "500": {
+            "description": "Error interno no servidor."
+          }
+        }
+      }
+    },
     "/api/v1/religion/{id}": {
       "get": {
-        "tags": [
-          "Religion"
-        ],
+        "tags": ["Religion"],
         "summary": "Retorna uma religião utilizando seu id.",
         "parameters": [
           {
@@ -808,9 +814,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Religion"
-        ],
+        "tags": ["Religion"],
         "summary": "Deleta uma religião do banco de dados utilizando o ID.",
         "parameters": [
           {
@@ -843,9 +847,7 @@
         }
       },
       "put": {
-        "tags": [
-          "Religion"
-        ],
+        "tags": ["Religion"],
         "summary": "Atualiza uma religião já cadastrada.",
         "parameters": [
           {
@@ -897,9 +899,7 @@
     },
     "/api/v1/institutions": {
       "post": {
-        "tags": [
-          "Institution"
-        ],
+        "tags": ["Institution"],
         "summary": "Cria uma nova instituição",
         "parameters": [
           {
@@ -946,9 +946,7 @@
     },
     "/api/v1/institutions/": {
       "get": {
-        "tags": [
-          "Institution"
-        ],
+        "tags": ["Institution"],
         "summary": "Retorna uma lista com todas as instituições cadastradas no Banco de dados.",
         "parameters": [
           {
@@ -980,9 +978,7 @@
     },
     "/api/v1/institutions/{id}": {
       "get": {
-        "tags": [
-          "Institution"
-        ],
+        "tags": ["Institution"],
         "summary": "Retorna uma instituição utilizando seu id.",
         "parameters": [
           {
@@ -1011,9 +1007,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Institution"
-        ],
+        "tags": ["Institution"],
         "summary": "Deleta uma instituição do banco de dados utilizando o ID.",
         "parameters": [
           {
@@ -1046,9 +1040,7 @@
         }
       },
       "put": {
-        "tags": [
-          "Institution"
-        ],
+        "tags": ["Institution"],
         "summary": "Atualiza uma instituição já cadastrada.",
         "parameters": [
           {
@@ -1077,7 +1069,7 @@
           "200": {
             "description": "Instituição atualizada com sucesso.",
             "schema": {
-              "$ref": "#/definitions/Religion"
+              "$ref": "#/definitions/Institution"
             }
           },
           "400": {
@@ -1102,11 +1094,7 @@
   "definitions": {
     "User": {
       "type": "object",
-      "required": [
-        "name",
-        "email",
-        "password"
-      ],
+      "required": ["name", "email", "password"],
       "properties": {
         "name": {
           "type": "string",
@@ -1124,11 +1112,7 @@
     },
     "Admin": {
       "type": "object",
-      "required": [
-        "name",
-        "email",
-        "password"
-      ],
+      "required": ["name", "email", "password"],
       "properties": {
         "cnpj": {
           "type": "string",
@@ -1156,13 +1140,7 @@
     },
     "News": {
       "type": "object",
-      "required": [
-        "title",
-        "description",
-        "date",
-        "institution",
-        "admin"
-      ],
+      "required": ["title", "description", "date", "institution", "admin"],
       "properties": {
         "title": {
           "type": "string",
@@ -1188,37 +1166,21 @@
     },
     "Religion": {
       "type": "object",
-      "required": [
-        "name",
-        "origin"
-      ],
+      "required": ["name", "avatar"],
       "properties": {
         "name": {
           "type": "string",
           "example": "Catolicismo"
         },
-        "origin": {
+        "avatar": {
           "type": "string",
-          "example": "Surgiu ainda no período..."
-        },
-        "description": {
-          "type": "string",
-          "example": "Religião de maio presença no território brasileiro"
-        },
-        "resume": {
-          "type": "string",
-          "example": "Caracterizado por serem..."
+          "example": "imgur.com"
         }
       }
     },
     "Institution": {
       "type": "object",
-      "required": [
-        "name",
-        "email",
-        "address",
-        "dailyEvents"
-      ],
+      "required": ["name", "email", "address", "dailyEvents"],
       "properties": {
         "name": {
           "type": "string",
