@@ -47,7 +47,7 @@ async function update(req, res) {
 
 async function getAll(req, res) {
   try {
-    const religions = await Religion.find();
+    const religions = await Religion.find().sort({ name: 1 });
     return res.status(200).json(religions);
   } catch ({ message }) {
     return res.status(500).json({ message });
