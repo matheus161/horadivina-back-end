@@ -47,7 +47,7 @@ async function update(req, res) {
 
 async function getAll(req, res) {
   try {
-    const { name } = req.body;
+    const name = req.query.name;
     let results = name
       ? await Religion.find({
           name: { $regex: `${name}.*`, $options: "i" },
