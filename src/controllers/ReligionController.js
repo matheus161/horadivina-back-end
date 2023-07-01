@@ -47,8 +47,14 @@ async function update(req, res) {
 
 async function getAll(req, res) {
   try {
-    const religions = await Religion.find().sort({ name: 1 });
-    return res.status(200).json(religions);
+    const { name } = req.body;
+    let results = name
+      ? await Religion.find({
+          name: { $regex: `${name}.*`, $options: "i" },
+        }).sort({ name: 1 })
+      : await Religion.find({}).sort({ name: 1 });
+
+    return res.status(200).json(results);
   } catch ({ message }) {
     return res.status(500).json({ message });
   }
