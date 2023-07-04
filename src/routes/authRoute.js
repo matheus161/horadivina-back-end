@@ -17,6 +17,12 @@ router.post(
 );
 
 router.post(
+    '/refresh-token',
+    limitRequests.slightly,
+    SessionController.refreshTokenUser
+);
+
+router.post(
     '/admin',
     limitRequests.slightly,
     validate(adminAuthRules),
