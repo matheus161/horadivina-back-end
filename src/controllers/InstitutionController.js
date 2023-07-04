@@ -2,12 +2,20 @@ import { Institution } from "../models/Institution";
 
 async function create(req, res) {
   try {
-    const { name, manager, information, address, dailyEvents, religion } =
-      req.body;
+    const {
+      name,
+      manager,
+      avatar,
+      information,
+      address,
+      dailyEvents,
+      religion,
+    } = req.body;
 
     const institution = await Institution.create({
       name,
       manager,
+      avatar,
       address,
       information,
       dailyEvents,

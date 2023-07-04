@@ -14,6 +14,10 @@ const InstitutionSchema = new Schema(
       type: String,
       required: true,
     },
+    avatar: {
+      type: String,
+      required: true,
+    },
     address: {
       type: Address,
       required: true,
@@ -49,6 +53,7 @@ const Institution = model("Institution", InstitutionSchema);
 const intitutionRules = Joi.object({
   name: Joi.string().max(100).required(),
   manager: Joi.string().max(100).required(),
+  avatar: Joi.string(),
   address: addressRules.required(),
   information: contactDetailsRules.required(),
   dailyEvents: eventRules.required(),
