@@ -33,6 +33,13 @@ const InstitutionSchema = new Schema(
         required: false,
       },
     ],
+    religion: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Religion",
+        required: true,
+      },
+    ],
   },
   { timeStamps: true, discriminatorKey: "role" }
 );
@@ -45,6 +52,7 @@ const intitutionRules = Joi.object({
   address: addressRules.required(),
   information: contactDetailsRules.required(),
   dailyEvents: eventRules.required(),
+  religion: Joi.array().required(),
 });
 
 export { Institution, intitutionRules };

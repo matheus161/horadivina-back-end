@@ -2,7 +2,8 @@ import { Institution } from "../models/Institution";
 
 async function create(req, res) {
   try {
-    const { name, manager, information, address, dailyEvents } = req.body;
+    const { name, manager, information, address, dailyEvents, religion } =
+      req.body;
 
     const institution = await Institution.create({
       name,
@@ -10,6 +11,7 @@ async function create(req, res) {
       address,
       information,
       dailyEvents,
+      religion,
     });
 
     return res.status(201).json(institution);
@@ -59,11 +61,19 @@ async function remove(req, res) {
 async function getAll(req, res) {
   try {
     const name = req.query.name;
-    let results = name
-      ? await Institution.find({
-          name: { $regex: `${name}.*`, $options: "i" },
-        }).sort({ name: 1 })
-      : await Institution.find({}).sort({ name: 1 });
+    const religion = req.query.religion;
+
+    const query = {};
+    if (name) {
+      query.name = { $regex: `${name}.*`, $options: "i" };
+    }
+    if (religion) {
+      query.religion = religion;
+    }
+
+    const results = query
+      ? await Institution.find(query).sort({ name: 1 })
+      : await Institution.find().sort({ name: 1 });
 
     // Paginação
     const page = parseInt(req.query.page) || 0;
