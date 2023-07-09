@@ -70,6 +70,7 @@ async function getAll(req, res) {
   try {
     const name = req.query.name;
     const religion = req.query.religion;
+    const sort = req.query.sort;
 
     const query = {};
     if (name) {
@@ -79,9 +80,12 @@ async function getAll(req, res) {
       query.religion = religion;
     }
 
+    const sortField =
+      sort === "1" ? { name: 1 } : { "address.lat": 1, "address.long": 1 };
+
     const results = query
-      ? await Institution.find(query).sort({ name: 1 })
-      : await Institution.find().sort({ name: 1 });
+      ? await Institution.find(query).sort(sortField)
+      : await Institution.find().sort(sortField);
 
     // Paginação
     const page = parseInt(req.query.page) || 0;
@@ -94,11 +98,11 @@ async function getAll(req, res) {
 
     const paginatedResults = results.slice(startIndex, endIndex);
 
-    var totalitens = results.length;
+    var totalItens = results.length;
 
-    const totalPages = Math.floor(totalitens / pageLimit);
+    const totalPages = Math.ceil(totalItens / pageLimit);
 
-    return res.status(200).json({ paginatedResults, totalPages, totalitens });
+    return res.status(200).json({ paginatedResults, totalPages, totalItens });
   } catch ({ message }) {
     return res.status(500).json({ message });
   }
