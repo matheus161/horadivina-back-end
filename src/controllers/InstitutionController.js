@@ -65,37 +65,12 @@ async function remove(req, res) {
     return res.status(500).json({ message });
   }
 }
-function toRadians(degrees) {
-  return degrees * (Math.PI / 180);
-}
-
-function calculateDistance(lat1, lon1, lat2, lon2) {
-  const earthRadius = 6371; // Radius of the Earth in kilometers
-
-  const dLat = toRadians(lat2 - lat1);
-  const dLon = toRadians(lon2 - lon1);
-
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRadians(lat1)) *
-      Math.cos(toRadians(lat2)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-  const distance = earthRadius * c;
-
-  return distance;
-}
 
 async function getAll(req, res) {
   try {
     const name = req.query.name;
     const religion = req.query.religion;
     const sort = req.query.sort;
-    const lat = parseFloat(req.query.lat);
-    const long = parseFloat(req.query.long);
 
     const query = {};
     if (name) {
@@ -105,29 +80,12 @@ async function getAll(req, res) {
       query.religion = religion;
     }
 
+    let sortField = {};
+    if (sort === "1") sortField = { name: 1 };
+
     const results = query
-      ? await Institution.find(query)
-      : await Institution.find();
-
-    // Calculate distances and add them to the results
-    const resultsWithDistance = results.map((institution) => {
-      const distance = calculateDistance(
-        lat,
-        long,
-        institution.address.lat,
-        institution.address.long
-      );
-      return { ...institution.toObject(), distance };
-    });
-
-    // Sort the results based on distance or name
-    const sortedResults = resultsWithDistance.sort((a, b) => {
-      if (sort === "1") {
-        return a.name.localeCompare(b.name);
-      } else {
-        return a.distance - b.distance;
-      }
-    });
+      ? await Institution.find(query).sort(sortField)
+      : await Institution.find().sort(sortField);
 
     // Paginação
     const page = parseInt(req.query.page) || 0;
@@ -138,9 +96,9 @@ async function getAll(req, res) {
 
     const endIndex = (page + 1) * pageLimit;
 
-    const paginatedResults = sortedResults.slice(startIndex, endIndex);
+    const paginatedResults = results.slice(startIndex, endIndex);
 
-    var totalItens = sortedResults.length;
+    var totalItens = results.length;
 
     const totalPages = Math.ceil(totalItens / pageLimit);
 
