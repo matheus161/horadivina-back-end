@@ -70,6 +70,7 @@ async function getAll(req, res) {
   try {
     const name = req.query.name;
     const religion = req.query.religion;
+    const limit = req.query.limit;
 
     const query = {};
     if (name) {
@@ -86,17 +87,19 @@ async function getAll(req, res) {
     // Paginação
     const page = parseInt(req.query.page) || 0;
 
-    const limit = 10;
+    const pageLimit = limit;
 
-    const startIndex = page * limit;
+    const startIndex = page * pageLimit;
 
-    const endIndex = (page + 1) * limit;
+    const endIndex = (page + 1) * pageLimit;
 
     const paginatedResults = results.slice(startIndex, endIndex);
 
     var totalitens = results.length;
 
-    return res.status(200).json({ paginatedResults, totalitens });
+    const totalPages = Math.floor(totalitens / pageLimit);
+
+    return res.status(200).json({ paginatedResults, totalPages, totalitens });
   } catch ({ message }) {
     return res.status(500).json({ message });
   }
