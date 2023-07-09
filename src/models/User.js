@@ -23,6 +23,14 @@ const UserSchema = new Schema(
       maxlength: 40,
       select: false,
     },
+
+    latitude: {
+      type: String,
+    },
+
+    longitude: {
+      type: String,
+    },
   },
 
   { timeStamps: true, discriminatorKey: "role" }
@@ -46,6 +54,8 @@ const userRules = Joi.object({
     .required(),
   email: emailRules,
   password: passwordRules,
+  latitude: Joi.string(),
+  longitude: Joi.string(),
 });
 
 const authRules = Joi.object({
