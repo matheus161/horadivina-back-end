@@ -70,7 +70,6 @@ async function getAll(req, res) {
   try {
     const name = req.query.name;
     const religion = req.query.religion;
-    const limit = req.query.limit;
 
     const query = {};
     if (name) {
@@ -87,7 +86,7 @@ async function getAll(req, res) {
     // Paginação
     const page = parseInt(req.query.page) || 0;
 
-    const pageLimit = limit;
+    const pageLimit = parseInt(req.query.limit) || 5;
 
     const startIndex = page * pageLimit;
 
