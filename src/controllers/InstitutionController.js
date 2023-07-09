@@ -1,5 +1,4 @@
 import { Institution } from "../models/Institution";
-import { User } from "../models/User";
 import haversine from "haversine-distance";
 
 async function create(req, res) {
@@ -72,15 +71,6 @@ async function getAll(req, res) {
     const name = req.query.name;
     const religion = req.query.religion;
 
-    const { userId } = req;
-    const user = await User.findById(userId);
-
-    if (!user) {
-      return res
-        .status(404)
-        .json({ message: `Não foi encontrado usuário com o id ${userId}` });
-    }
-
     const query = {};
     if (name) {
       query.name = { $regex: `${name}.*`, $options: "i" };
@@ -118,6 +108,16 @@ async function getAll(req, res) {
       } else {
         return 0;
       }
+    });
+
+    // Adicionando campo distancia
+    results = results.map((institution) => {
+      const referenciaInstitution = {
+        latitude: institution.address.lat,
+        longitude: institution.address.long,
+      };
+      const distancia = haversine(referenciaInstitution, referencia);
+      return { ...institution._doc, distancia };
     });
 
     // Paginação
