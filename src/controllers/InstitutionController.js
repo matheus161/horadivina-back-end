@@ -1,4 +1,5 @@
 import { Institution } from "../models/Institution";
+import haversine from "haversine-distance";
 
 async function create(req, res) {
   try {
@@ -57,7 +58,6 @@ async function remove(req, res) {
     if (!institution) {
       return res.status(404).json({ message: "Instituição não encontrada." });
     }
-
     return res
       .status(200)
       .json({ message: "Instituição deletada com sucesso" });
@@ -70,7 +70,6 @@ async function getAll(req, res) {
   try {
     const name = req.query.name;
     const religion = req.query.religion;
-    const sort = req.query.sort;
 
     const query = {};
     if (name) {
@@ -80,12 +79,46 @@ async function getAll(req, res) {
       query.religion = religion;
     }
 
-    let sortField = {};
-    if (sort === "1") sortField = { name: 1 };
+    let results = query
+      ? await Institution.find(query)
+      : await Institution.find();
 
-    const results = query
-      ? await Institution.find(query).sort(sortField)
-      : await Institution.find().sort(sortField);
+    // Ordenar os resultados usando a fórmula Haversine e uma coordenada de referência
+    const referencia = {
+      latitude: parseFloat(req.query.lat),
+      longitude: parseFloat(req.query.lon),
+    };
+
+    results.sort((a, b) => {
+      const refereciaA = {
+        latitude: a.address.lat,
+        longitude: a.address.long,
+      };
+      const refereciaB = {
+        latitude: b.address.lat,
+        longitude: b.address.long,
+      };
+      const distanciaA = haversine(refereciaA, referencia);
+      const distanciaB = haversine(refereciaB, referencia);
+
+      if (distanciaA < distanciaB) {
+        return -1;
+      } else if (distanciaA > distanciaB) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+
+    // Adicionando campo distancia
+    results = results.map((institution) => {
+      const referenciaInstitution = {
+        latitude: institution.address.lat,
+        longitude: institution.address.long,
+      };
+      const distancia = haversine(referenciaInstitution, referencia);
+      return { ...institution._doc, distancia };
+    });
 
     // Paginação
     const page = parseInt(req.query.page) || 0;

@@ -1,54 +1,66 @@
-import { Schema, model } from 'mongoose';
-import Joi from 'joi';
-import PasswordUtils from '../utils/PasswordUtils';
+import { Schema, model } from "mongoose";
+import Joi from "joi";
+import PasswordUtils from "../utils/PasswordUtils";
 
 const UserSchema = new Schema(
-    {
-        name: {
-            type: String,
-            required: true,
-        },
-
-        email: {
-            type: String,
-            lowercase: true,
-            required: true,
-            unique: true,
-        },
-
-        password: {
-            type: String,
-            required: true,
-            minlength: 8,
-            maxlength: 40,
-            select: false,
-        },
+  {
+    name: {
+      type: String,
+      required: true,
     },
 
-    { timeStamps: true, discriminatorKey: 'role' },
+    email: {
+      type: String,
+      lowercase: true,
+      required: true,
+      unique: true,
+    },
+
+    password: {
+      type: String,
+      required: true,
+      minlength: 8,
+      maxlength: 40,
+      select: false,
+    },
+
+    latitude: {
+      type: String,
+    },
+
+    longitude: {
+      type: String,
+    },
+  },
+
+  { timeStamps: true, discriminatorKey: "role" }
 );
 
 // Deve-se usar function() e não arrow function por causa do this.
 // eslint-disable-next-line func-names
-UserSchema.pre('save', async function (next) {
-    this.password = await PasswordUtils.encrypt(this.password);
-    next();
+UserSchema.pre("save", async function (next) {
+  this.password = await PasswordUtils.encrypt(this.password);
+  next();
 });
 
-const User = model('User', UserSchema);
+const User = model("User", UserSchema);
 
 const emailRules = Joi.string().email().required();
 const passwordRules = Joi.string().min(8).max(40).required();
 
 const userRules = Joi.object({
-    name: Joi.string().pattern(new RegExp(/^[A-Za-zÁÉÍÓÚáéíóúãõÃÕâêôÂÊÔ ]+$/)).required(),
-    email: emailRules,
-    password: passwordRules,
+  name: Joi.string()
+    .pattern(new RegExp(/^[A-Za-zÁÉÍÓÚáéíóúãõÃÕâêôÂÊÔ ]+$/))
+    .required(),
+  email: emailRules,
+  password: passwordRules,
+  latitude: Joi.string(),
+  longitude: Joi.string(),
 });
 
 const authRules = Joi.object({
-    email: emailRules,
-    password: passwordRules,
+  email: emailRules,
+  password: passwordRules,
 });
 
 export { User, userRules, authRules };
