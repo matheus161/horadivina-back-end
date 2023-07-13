@@ -111,13 +111,23 @@ async function getAll(req, res) {
     });
 
     // Adicionando campo distancia
-    results = results.map((institution) => {
-      const referenciaInstitution = {
-        latitude: institution.address.lat,
-        longitude: institution.address.long,
-      };
-      const distancia = haversine(referenciaInstitution, referencia);
-      return { ...institution._doc, distancia };
+    results = results
+      .map((institution) => {
+        const referenciaInstitution = {
+          latitude: institution.address.lat,
+          longitude: institution.address.long,
+        };
+        let distancia = haversine(referenciaInstitution, referencia);
+
+        return { ...institution._doc, distancia };
+      })
+      .filter((institution) => institution.distancia < 100000);
+
+    results.forEach((institution) => {
+      institution.distancia =
+        institution.distancia >= 1000
+          ? (institution.distancia / 1000).toFixed(2) + " Km"
+          : institution.distancia.toFixed(0) + " m";
     });
 
     // Paginação
