@@ -124,6 +124,12 @@ async function getAll(req, res) {
       .filter((institution) => institution.distancia < 100000);
 
     results.forEach((institution) => {
+      institution.favorite = institution.favorited.includes(req.query.id)
+        ? true
+        : false;
+      institution.subscribed = institution.subscribed.includes(req.query.id)
+        ? true
+        : false;
       institution.distancia =
         institution.distancia >= 1000
           ? (institution.distancia / 1000).toFixed(2) + " Km"

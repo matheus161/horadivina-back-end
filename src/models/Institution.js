@@ -37,6 +37,13 @@ const InstitutionSchema = new Schema(
         required: false,
       },
     ],
+    favorited: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: false,
+      },
+    ],
     religion: [
       {
         type: mongoose.Schema.Types.ObjectId,
