@@ -16,7 +16,6 @@ router.use(verifyToken);
 
 router.put("/change-pass", UserController.changePassword);
 router.put("/", UserController.update);
-router.put("/loc", UserController.updateUserLocation);
 router.delete("/", UserController.remove);
 
 export default { router, name: "/user" };

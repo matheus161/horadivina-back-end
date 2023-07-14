@@ -50,29 +50,6 @@ async function update(req, res) {
   }
 }
 
-async function updateUserLocation(req, res) {
-  try {
-    const { userId, body } = req;
-    const { latitude, longitude } = body;
-    const user = await User.findById(userId);
-
-    if (!user) {
-      return res
-        .status(404)
-        .json({ message: `Não foi encontrado usuário com o id ${userId}` });
-    }
-
-    await user.updateOne({
-      latitude: latitude,
-      longitude: longitude,
-    });
-
-    return res.status(200).json();
-  } catch ({ message }) {
-    return res.status(500).json({ message });
-  }
-}
-
 async function changePassword(req, res) {
   try {
     const { userId } = req;
@@ -151,5 +128,4 @@ export default {
   getAll,
   getById,
   changePassword,
-  updateUserLocation,
 };
