@@ -54,7 +54,7 @@ async function update(req, res) {
       });
     }
 
-    if (admin.email != body.email) {
+    if (admin.email !== body.email) {
       if (req.adminEmailInUse) {
         return res
           .status(400)
