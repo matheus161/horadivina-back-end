@@ -87,8 +87,87 @@ async function changePassword(req, res) {
 
 async function getAll(req, res) {
   try {
-    const users = await User.find();
-    return res.status(200).json(users);
+    const userId = req.query.id;
+    const name = req.query.name;
+    const religion = req.query.religion;
+
+    const query = {};
+    if (name) {
+      query.name = { $regex: `${name}.*`, $options: "i" };
+    }
+    if (religion) {
+      query.religion = religion;
+    }
+
+    // Adicionando filtro pelo usuário na cláusula $in
+    if (userId) {
+      query.favorited = { $in: [userId] };
+    }
+
+    let results = query
+      ? await Institution.find(query)
+      : await Institution.find();
+
+    // Ordenar os resultados usando a fórmula Haversine e uma coordenada de referência
+    const referencia = {
+      latitude: parseFloat(req.query.lat),
+      longitude: parseFloat(req.query.lon),
+    };
+
+    results.sort((a, b) => {
+      const refereciaA = {
+        latitude: a.address.lat,
+        longitude: a.address.long,
+      };
+      const refereciaB = {
+        latitude: b.address.lat,
+        longitude: b.address.long,
+      };
+      const distanciaA = haversine(refereciaA, referencia);
+      const distanciaB = haversine(refereciaB, referencia);
+
+      if (distanciaA < distanciaB) {
+        return -1;
+      } else if (distanciaA > distanciaB) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+
+    // Adicionando campo distancia
+    results = results
+      .map((institution) => {
+        const referenciaInstitution = {
+          latitude: institution.address.lat,
+          longitude: institution.address.long,
+        };
+        let distancia = haversine(referenciaInstitution, referencia);
+
+        return { ...institution._doc, distancia };
+      })
+      .filter((institution) => institution.distancia < 100000);
+
+    results.forEach((institution) => {
+      institution.favorite = true; // Set to true since we've already filtered favorited institutions
+      institution.subscribed = institution.subscribed.includes(userId);
+      institution.distancia =
+        institution.distancia >= 1000
+          ? (institution.distancia / 1000).toFixed(2) + " Km"
+          : institution.distancia.toFixed(0) + " m";
+    });
+
+    // Paginação
+    const page = parseInt(req.query.page) || 0;
+    const pageLimit = parseInt(req.query.limit) || 5;
+    const startIndex = page * pageLimit;
+    const endIndex = (page + 1) * pageLimit;
+
+    const paginatedResults = results.slice(startIndex, endIndex);
+    var totalItens = results.length;
+    const totalPages = Math.ceil(totalItens / pageLimit);
+
+    return res.status(200).json({ paginatedResults, totalPages, totalItens });
   } catch ({ message }) {
     return res.status(500).json({ message });
   }
