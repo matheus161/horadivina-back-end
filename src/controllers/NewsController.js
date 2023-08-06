@@ -48,7 +48,7 @@ async function getAll(req, res) {
 
     const news = await News.find({
       institution: id,
-    }).populate("institution");
+    });
 
     const page = parseInt(req.query.page) || 0;
 
