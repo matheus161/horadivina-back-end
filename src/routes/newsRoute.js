@@ -14,5 +14,6 @@ router.post("/", verifyTokenAdmin, validate(newsRules), NewsController.create);
 router.get("/:id", verifyId, NewsController.getAll);
 router.get("/:id", verifyId, NewsController.getById);
 router.delete("/:id", verifyTokenAdmin, verifyId, NewsController.remove);
+router.put("/:id", verifyTokenAdmin, verifyId, NewsController.update);
 
 export default { router, name: "/news" };

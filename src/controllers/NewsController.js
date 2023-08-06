@@ -18,6 +18,26 @@ async function create(req, res) {
   }
 }
 
+async function update(req, res) {
+  try {
+    const news = await News.findById(req.params.id);
+
+    if (!news) {
+      return res.status(404).json({
+        message: `Notícia não encontrada`,
+      });
+    }
+
+    const newsUpdated = await News.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+
+    return res.status(200).json(newsUpdated);
+  } catch ({ message }) {
+    return res.status(500).json({ message });
+  }
+}
+
 async function getAll(req, res) {
   try {
     const { id } = req.params;
@@ -80,4 +100,5 @@ export default {
   getAll,
   getById,
   remove,
+  update,
 };

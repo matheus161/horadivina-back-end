@@ -19,6 +19,11 @@ const NewsSchema = new Schema(
       require: true,
     },
 
+    image: {
+      type: String,
+      required: true,
+    },
+
     institution: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Institution",
@@ -40,6 +45,7 @@ const newsRules = Joi.object({
   title: Joi.string().required(),
   description: Joi.string().required(),
   institution: Joi.string().required(),
+  image: Joi.string().required(),
 });
 
 export { News, newsRules };
