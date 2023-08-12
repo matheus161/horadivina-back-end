@@ -48,7 +48,7 @@ async function getAll(req, res) {
 
     const news = await News.find({
       institution: id,
-    });
+    }).sort({ _id: -1 });
 
     const page = parseInt(req.query.page) || 0;
 
