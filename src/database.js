@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 import LogUtils from "./utils/LogUtils";
 
 async function connect() {
-  //const uri = `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`;
-  const uri = `${process.env.DB_URI}`;
+  const uri = `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`;
+  //const uri = `${process.env.DB_URI}`;
   const options = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
