@@ -3,6 +3,8 @@ import Joi from "joi";
 import { Address, addressRules } from "./Address";
 import { Event, eventRules } from "./Event";
 import { ContactDetails, contactDetailsRules } from "./ContactDetails";
+import { Pix, pixRules } from "./Pix";
+import { BankAccount, bankAccountRules } from "./BankAccount";
 
 const InstitutionSchema = new Schema(
   {
@@ -16,6 +18,14 @@ const InstitutionSchema = new Schema(
     },
     avatar: {
       type: String,
+      required: true,
+    },
+    pix: {
+      type: Pix,
+      required: true,
+    },
+    account: {
+      type: BankAccount,
       required: true,
     },
     address: {
@@ -61,6 +71,8 @@ const intitutionRules = Joi.object({
   name: Joi.string().max(100).required(),
   manager: Joi.string().max(100).required(),
   avatar: Joi.string(),
+  pix: pixRules.required(),
+  account: bankAccountRules.required(),
   address: addressRules.required(),
   information: contactDetailsRules.required(),
   dailyEvents: eventRules.required(),

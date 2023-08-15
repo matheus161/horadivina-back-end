@@ -11,6 +11,8 @@ async function create(req, res) {
       address,
       dailyEvents,
       religion,
+      pix,
+      account,
     } = req.body;
 
     const institution = await Institution.create({
@@ -21,6 +23,8 @@ async function create(req, res) {
       information,
       dailyEvents,
       religion,
+      pix,
+      account,
     });
 
     return res.status(201).json(institution);
