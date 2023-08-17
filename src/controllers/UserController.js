@@ -306,6 +306,26 @@ async function getFavoriteInstitutionsFilteredByReligion(req, res) {
   }
 }
 
+async function updateRatio(req, res) {
+  try {
+    const { userId } = req;
+    const { ratio } = req.body;
+
+    const user = await User.findById(userId).select("+password");
+
+    if (!user) {
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+
+    await user.updateOne({
+      ratio: ratio || user.ratio,
+    });
+    return res.status(200).json({ message: "Ratio alterado com sucesso" });
+  } catch ({ message }) {
+    return res.status(500).json({ message });
+  }
+}
+
 export default {
   create,
   update,
@@ -314,4 +334,5 @@ export default {
   getById,
   changePassword,
   getFavoriteInstitutionsFilteredByReligion,
+  updateRatio,
 };

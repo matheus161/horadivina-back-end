@@ -1,4 +1,5 @@
 import { Institution } from "../models/Institution";
+import { User } from "../models/User";
 import haversine from "haversine-distance";
 
 async function create(req, res) {
@@ -74,6 +75,13 @@ async function getAll(req, res) {
   try {
     const name = req.query.name;
     const religion = req.query.religion;
+    const { userId } = req;
+
+    const user = await User.findById(userId).select("+password");
+
+    if (!user) {
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
 
     const query = {};
     if (name) {
@@ -125,7 +133,7 @@ async function getAll(req, res) {
 
         return { ...institution._doc, distancia };
       })
-      .filter((institution) => institution.distancia < 100000);
+      .filter((institution) => institution.distancia < user.ratio * 1000);
 
     results.forEach((institution) => {
       institution.favorite = institution.favorited.includes(req.query.id)

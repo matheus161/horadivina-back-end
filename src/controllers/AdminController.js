@@ -1,4 +1,5 @@
 import { Admin } from "../models/Admin";
+import PasswordUtils from "../utils/PasswordUtils";
 
 async function create(req, res) {
   try {
@@ -85,6 +86,38 @@ async function update(req, res) {
   }
 }
 
+async function changePassword(req, res) {
+  try {
+    const { userId } = req;
+    const { password, newPassword } = req.body;
+
+    if (password === newPassword) {
+      return res
+        .status(401)
+        .json({ message: "A nova senha não pode ser igual a atual" });
+    }
+
+    const admin = await Admin.findById(userId).select("+password");
+
+    if (!admin) {
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+
+    const passwordsMatch = await PasswordUtils.match(password, admin.password);
+    if (!passwordsMatch) {
+      return res.status(401).json({ message: "A senha atual está incorreta" });
+    }
+
+    admin.password = newPassword;
+    await admin.save(); // Possui um 'pré' que faz a encriptação
+
+    admin.password = undefined;
+    return res.status(200).json({ message: "Senha alterada com sucesso" });
+  } catch ({ message }) {
+    return res.status(500).json({ message });
+  }
+}
+
 async function remove(req, res) {
   try {
     const admin = await Admin.findByIdAndRemove(req.params.id);
@@ -104,5 +137,6 @@ export default {
   getAll,
   getById,
   update,
+  changePassword,
   remove,
 };

@@ -16,6 +16,7 @@ router.use(verifyToken);
 
 router.put("/change-pass", UserController.changePassword);
 router.put("/", UserController.update);
+router.put("/ratio", UserController.updateRatio);
 router.delete("/", UserController.remove);
 router.get(
   "/:id/favorite",
