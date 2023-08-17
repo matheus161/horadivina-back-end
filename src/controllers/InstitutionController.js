@@ -75,9 +75,8 @@ async function getAll(req, res) {
   try {
     const name = req.query.name;
     const religion = req.query.religion;
-    const { userId } = req;
 
-    const user = await User.findById(userId).select("+password");
+    const user = await User.findById(req.query.id).select("+password");
 
     if (!user) {
       return res.status(404).json({ message: "Usuário não encontrado" });

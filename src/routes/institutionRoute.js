@@ -5,7 +5,6 @@ import limitRequests from "../middlewares/limitRequests";
 import verifyId from "../middlewares/verifyId";
 import validate from "../middlewares/validate";
 import verifyTokenAdmin from "../middlewares/verifyTokenAdmin";
-import verifyToken from "../middlewares/verifyToken";
 
 const router = Router();
 
@@ -19,7 +18,7 @@ router.post(
 );
 router.put("/:id", verifyTokenAdmin, verifyId, InstitutionController.update);
 router.delete("/:id", verifyTokenAdmin, verifyId, InstitutionController.remove);
-router.get("/", verifyToken, InstitutionController.getAll);
+router.get("/", InstitutionController.getAll);
 router.get("/:id", InstitutionController.getById);
 
 export default { router, name: "/institutions" };
