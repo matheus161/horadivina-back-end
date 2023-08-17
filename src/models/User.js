@@ -23,6 +23,11 @@ const UserSchema = new Schema(
       maxlength: 40,
       select: false,
     },
+
+    ratio: {
+      type: Number,
+      default: 100,
+    },
   },
 
   { timeStamps: true, discriminatorKey: "role" }

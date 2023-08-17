@@ -12,6 +12,7 @@ const router = Router();
 router.use(limitRequests.slightly);
 router.use(verifyTokenAdmin);
 
+router.put("/change-pass", AdminController.changePassword);
 router.post("/", validate(adminRules), adminEmailInUse, AdminController.create);
 router.get("/", AdminController.getAll);
 router.get("/:id", verifyId, AdminController.getById);
