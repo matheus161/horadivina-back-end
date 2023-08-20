@@ -52,7 +52,7 @@ async function getAll(req, res) {
 
     const page = parseInt(req.query.page) || 0;
 
-    const limit = 5;
+    const limit = 2;
 
     const startIndex = page * limit;
 

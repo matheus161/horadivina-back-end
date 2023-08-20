@@ -132,7 +132,7 @@ async function getAll(req, res) {
 
         return { ...institution._doc, distancia };
       })
-      .filter((institution) => institution.distancia < user.ratio * 1000);
+      .filter((institution) => institution.distancia <= user.ratio * 1000);
 
     results.forEach((institution) => {
       institution.favorite = institution.favorited.includes(req.query.id)
