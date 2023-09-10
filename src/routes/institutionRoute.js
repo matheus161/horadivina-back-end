@@ -20,5 +20,6 @@ router.put("/:id", verifyTokenAdmin, verifyId, InstitutionController.update);
 router.delete("/:id", verifyTokenAdmin, verifyId, InstitutionController.remove);
 router.get("/", InstitutionController.getAll);
 router.get("/:id", InstitutionController.getById);
+router.get("/admin/:id", InstitutionController.getInstitutionByAdmin);
 
 export default { router, name: "/institutions" };

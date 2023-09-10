@@ -61,6 +61,11 @@ const InstitutionSchema = new Schema(
         required: true,
       },
     ],
+    admin: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
+      required: false,
+    },
   },
   { timeStamps: true, discriminatorKey: "role" }
 );

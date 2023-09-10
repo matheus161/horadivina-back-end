@@ -1,5 +1,6 @@
 import { Institution } from "../models/Institution";
 import { User } from "../models/User";
+import { Admin } from "../models/Admin";
 import haversine from "haversine-distance";
 
 async function create(req, res) {
@@ -15,6 +16,7 @@ async function create(req, res) {
       pix,
       account,
     } = req.body;
+    const { userId } = req;
 
     const institution = await Institution.create({
       name,
@@ -26,6 +28,7 @@ async function create(req, res) {
       religion,
       pix,
       account,
+      admin: userId,
     });
 
     return res.status(201).json(institution);
@@ -181,10 +184,42 @@ async function getById(req, res) {
   }
 }
 
+async function getInstitutionByAdmin(req, res) {
+  try {
+    const admin = await Admin.findById(req.params.id);
+    if (!admin) {
+      return res.status(404).json({ message: "Admin não encontrada" });
+    }
+    const results = await Institution.find({ admin: req.params.id }).populate(
+      "religion"
+    );
+
+    // Paginação
+    const page = parseInt(req.query.page) || 0;
+
+    const pageLimit = parseInt(req.query.limit) || 5;
+
+    const startIndex = page * pageLimit;
+
+    const endIndex = (page + 1) * pageLimit;
+
+    const paginatedResults = results.slice(startIndex, endIndex);
+
+    var totalItens = results.length;
+
+    const totalPages = Math.ceil(totalItens / pageLimit);
+
+    return res.status(200).json({ paginatedResults, totalPages, totalItens });
+  } catch ({ message }) {
+    return res.status(500).json({ message });
+  }
+}
+
 export default {
   create,
   update,
   remove,
   getAll,
   getById,
+  getInstitutionByAdmin,
 };
