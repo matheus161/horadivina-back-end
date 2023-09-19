@@ -55,6 +55,7 @@ async function update(req, res) {
 
     return res.status(200).json(institutionUpdated);
   } catch ({ message }) {
+    console.log(message);
     return res.status(500).json({ message });
   }
 }
